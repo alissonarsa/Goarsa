@@ -1,0 +1,32 @@
+@model IEnumerable<Goarsa.Models.Empresa>
+@{
+    ViewData["Title"] = "Empresas";
+}
+<h2>Empresas Cadastradas</h2>
+<a href="/Empresa/Create">Nova Empresa</a>
+<table border="1">
+    <tr>
+        <th>CNPJ</th>
+        <th>Razão Social</th>
+        <th>Município</th>
+        <th>UF</th>
+        <th>Solicitantes</th>
+    </tr>
+    @foreach (var empresa in Model)
+    {
+        <tr>
+            <td>@empresa.Cnpj</td>
+            <td>@empresa.RazaoSocial</td>
+            <td>@empresa.Municipio</td>
+            <td>@empresa.Uf</td>
+            <td>
+                <ul>
+                @foreach (var s in empresa.Solicitantes)
+                {
+                    <li>@s.Nome - @s.Telefone - @s.Email</li>
+                }
+                </ul>
+            </td>
+        </tr>
+    }
+</table>

@@ -1,0 +1,68 @@
+@model Goarsa.Models.Empresa
+@{
+    ViewData["Title"] = "Cadastrar Empresa";
+}
+<h2>Cadastrar Empresa</h2>
+<form asp-action="Create" method="post">
+    <div>
+        <label>CNPJ:</label>
+        <input type="text" id="cnpj" name="Cnpj" value="@Model.Cnpj" />
+        <button type="button" onclick="buscarCnpj()">Buscar CNPJ</button>
+    </div>
+    <div>
+        <label>Razão Social:</label>
+        <input type="text" name="RazaoSocial" value="@Model.RazaoSocial" />
+    </div>
+    <div>
+        <label>Nome Fantasia:</label>
+        <input type="text" name="NomeFantasia" value="@Model.NomeFantasia" />
+    </div>
+    <div>
+        <label>Município:</label>
+        <input type="text" name="Municipio" value="@Model.Municipio" />
+    </div>
+    <div>
+        <label>UF:</label>
+        <input type="text" name="Uf" value="@Model.Uf" />
+    </div>
+    <div>
+        <label>Endereço:</label>
+        <input type="text" name="Endereco" value="@Model.Endereco" />
+    </div>
+    <h4>Solicitantes</h4>
+    <div id="solicitantes">
+        <!-- Campos de solicitantes serão adicionados aqui -->
+    </div>
+    <button type="button" onclick="adicionarSolicitante()">Adicionar Solicitante</button>
+    <br /><br />
+    <button type="submit">Salvar Empresa</button>
+</form>
+<script>
+function buscarCnpj() {
+    var cnpj = document.getElementById('cnpj').value;
+    fetch('/Empresa/BuscarCnpj?cnpj=' + cnpj)
+        .then(response => response.json())
+        .then(data => {
+            document.querySelector('input[name=RazaoSocial]').value = data.razao_social || '';
+            document.querySelector('input[name=NomeFantasia]').value = data.nome_fantasia || '';
+            document.querySelector('input[name=Municipio]').value = data.municipio || '';
+            document.querySelector('input[name=Uf]').value = data.uf || '';
+            document.querySelector('input[name=Endereco]').value = data.descricao_tipo_de_logradouro + ' ' + data.logradouro + ', ' + data.numero + ' ' + data.bairro;
+        });
+}
+let solicitanteIndex = 0;
+function adicionarSolicitante() {
+    const div = document.createElement('div');
+    div.innerHTML = `
+        <label>Nome:</label>
+        <input type="text" name="Solicitantes[${solicitanteIndex}].Nome" />
+        <label>Telefone:</label>
+        <input type="text" name="Solicitantes[${solicitanteIndex}].Telefone" />
+        <label>Email:</label>
+        <input type="email" name="Solicitantes[${solicitanteIndex}].Email" />
+        <hr />
+    `;
+    document.getElementById('solicitantes').appendChild(div);
+    solicitanteIndex++;
+}
+</script>
